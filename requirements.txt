@@ -1,0 +1,4 @@
+# NAL 核心运行时（Python 3.13）
+# 只列 bot 桥接 + 管理面板真正 import 的包；其余工具见 requirements-tools.txt。
+# 版本为此机 live venv 实测值（2026-11-04）。
+websockets==17.3

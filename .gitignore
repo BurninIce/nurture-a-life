@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# 本机配置与密钥
+*.key
+*.env
+.env
+api.env
+qwen.key
+local_api.key
+bot.group
+bot.admin
+state/
+logs/
+*.log
+
+# 角色卡与运行配置（默认不入库，只保留随仓库发布的示例）
+prompts/personas/*
+!prompts/personas/README.md
+!prompts/personas/character/
+!prompts/personas/character/**
+!prompts/personas/kurumi/
+!prompts/personas/kurumi/**
+
+# 版权 / 私有素材
+assets/personas/*
+!assets/personas/kurumi/
+assets/personas/kurumi/*
+!assets/personas/kurumi/avatar.jpg
+corpus/
+Raw Materials/
+
+# 大型工具与模型
+models/*.gguf
+models/*.part*
+models/faster-whisper-large-v3/
+tools/renderdoc/
+tools/DALTools/
+tools/NapCat/
+tools/Ollama/
+
+# 临时产物
+analysis_tmp/
+.probe_tmp/
+.shot_tmp/
+.workbuddy/
+trashcan/
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/settings.local.json

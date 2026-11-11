@@ -1,0 +1,6 @@
+# 开发/回归工具（与 bot 共用 .venv，非核心运行依赖）
+#   pip install -r requirements-dev.txt
+-r requirements.txt
+
+pytest==9.2.0
+ruff==0.17.4

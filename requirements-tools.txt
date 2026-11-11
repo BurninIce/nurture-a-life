@@ -1,0 +1,6 @@
+# 可选工具依赖（非核心运行依赖）
+#   pip install -r requirements-tools.txt
+-r requirements.txt
+
+# novel_rag 向量检索（未提供语料索引时不会加载）
+numpy==2.5.4

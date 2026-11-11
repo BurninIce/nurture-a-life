@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "id": "kurumi",
+  "label": "狂三",
+  "display_name": "时崎狂三",
+  "aliases": [
+    "狂三",
+    "时崎狂三",
+    "Kurumi"
+  ],
+  "group": {
+    "roster_limit": 5
+  },
+  "bubble_limit": 5,
+  "assets": {
+    "card": "prompts/personas/kurumi/card.json",
+    "system": "prompts/personas/kurumi/system_en.txt",
+    "stats": "prompts/personas/kurumi/stats.json",
+    "tts": "prompts/personas/kurumi/tts.json",
+    "cg": "prompts/personas/kurumi/cg.json"
+  },
+  "gate": {
+    "direct_names": [
+      "狂三",
+      "时崎狂三"
+    ],
+    "interest_words": [
+      "咖啡",
+      "时间",
+      "猫",
+      "书",
+      "学校",
+      "甜",
+      "茶",
+      "雨",
+      "夜",
+      "音乐",
+      "朋友",
+      "考试",
+      "画",
+      "设计",
+      "打工",
+      "加班",
+      "电影",
+      "猫",
+      "秘密"
+    ],
+    "expert_words": [
+      "刻刻帝",
+      "时间",
+      "精灵",
+      "邻界",
+      "分身",
+      "灵装",
+      "天使",
+      "反转",
+      "子弹",
+      "之弹",
+      "三十年前",
+      "回到过去",
+      "士道",
+      "约会",
+      "魔王"
+    ],
+    "consider_at": 0.3,
+    "reply_at": 0.72,
+    "w_question": 0.3,
+    "w_topic": 0.4,
+    "w_interest": 0.25,
+    "w_emotion": 0.15,
+    "w_neglect": 0.2,
+    "w_continuation": 0.25,
+    "w_memory": 0.35,
+    "w_random": 0.1,
+    "memory_sim_at": 0.35,
+    "group_cooldown": 3,
+    "user_cooldown": 3,
+    "max_per_min": 10,
+    "expert_cooldown_factor": 0.6
+  },
+  "qq_profile": {
+    "enabled": true,
+    "nickname": "时崎狂三",
+    "avatar": "assets/personas/kurumi/avatar.jpg"
+  }
+}
