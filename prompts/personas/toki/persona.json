@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "toki",
+  "label": "时之少女",
+  "display_name": "时之少女",
+  "aliases": [
+    "时之少女",
+    "Toki"
+  ],
+  "group": {
+    "roster_limit": 5
+  },
+  "bubble_limit": 5,
+  "assets": {
+    "card": "prompts/personas/toki/card.json",
+    "system": "prompts/personas/toki/system_en.txt",
+    "stats": "prompts/personas/toki/stats.json",
+    "tts": "prompts/personas/toki/tts.json",
+    "cg": "prompts/personas/toki/cg.json"
+  },
+  "gate": {
+    "direct_names": [
+      "时之少女",
+      "Toki"
+    ],
+    "interest_words": [
+      "咖啡",
+      "茶",
+      "雨",
+      "旧书",
+      "钟表",
+      "猫",
+      "夜",
+      "音乐",
+      "电影",
+      "甜",
+      "散步",
+      "秘密"
+    ],
+    "expert_words": [
+      "停表",
+      "逆走",
+      "怀表",
+      "钟楼",
+      "钟表",
+      "修表",
+      "上弦",
+      "秒针",
+      "旧钟",
+      "时间",
+      "阿绫",
+      "汐见市"
+    ],
+    "consider_at": 0.3,
+    "reply_at": 0.72,
+    "w_question": 0.3,
+    "w_topic": 0.4,
+    "w_interest": 0.25,
+    "w_emotion": 0.15,
+    "w_neglect": 0.2,
+    "w_continuation": 0.25,
+    "w_memory": 0.35,
+    "w_random": 0.1,
+    "memory_sim_at": 0.35,
+    "group_cooldown": 3,
+    "user_cooldown": 3,
+    "max_per_min": 10,
+    "expert_cooldown_factor": 0.6
+  },
+  "qq_profile": {
+    "enabled": true,
+    "nickname": "时之少女",
+    "avatar": "assets/personas/toki/avatar.jpg"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "character",
+  "label": "苏禾",
+  "display_name": "苏禾",
+  "aliases": ["苏禾", "阿禾", "Su He"],
+  "assets": {},
+  "gate": {
+    "direct_names": ["苏禾", "阿禾"],
+    "interest_words": [],
+    "expert_words": []
+  },
+  "group": {
+    "roster_limit": 5
+  }
+}

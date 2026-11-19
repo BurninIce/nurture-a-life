@@ -1,0 +1,19 @@
+# 开发/回归工具配置。运行时依赖仍以 requirements.txt 为准。
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+extend-exclude = [
+    ".venv",
+    "prompts",
+    "state",
+    "logs",
+]
+
+[tool.ruff.lint]
+# 只启用能抓真 bug 的规则：语法/未定义名/重复定义/无效断言。
+# E402（测试插 sys.path）、E741（legacy 短名）属于存量风格，暂不纳入。
+select = ["E9", "F63", "F7", "F811", "F82"]
