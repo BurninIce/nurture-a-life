@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAL · 快速开始</title>
+<link rel="stylesheet" href="/ui.css">
+<style>
+  .qs-wrap { max-width: 940px; margin: 0 auto; }
+  .qs-hero { margin-bottom: 20px; }
+  .qs-eyebrow {
+    display: inline-block; font-size: 12px; letter-spacing: .08em;
+    color: var(--accent); background: var(--accent-soft);
+    border-radius: 999px; padding: 2px 10px; margin-bottom: 10px;
+  }
+  .qs-hero h1 { font-size: 24px; margin: 0 0 6px; font-weight: 650; }
+  .qs-hero p { margin: 0; color: var(--muted); font-size: 13px; }
+  .qs-checks {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+  }
+  .qs-check { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+  .qs-check .badge { flex: 0 0 auto; margin-top: 1px; }
+  .qs-check .row-hint { overflow-wrap: anywhere; }
+  .qs-main {
+    display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 20px; align-items: start; margin-top: 20px;
+  }
+  @media (max-width: 860px) {
+    .qs-main, .qs-checks { grid-template-columns: 1fr; }
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; }
+  .field:last-of-type { margin-bottom: 8px; }
+  .field .input { width: 100%; }
+  .field-top { display: flex; align-items: baseline; gap: 8px; }
+  .req { font-size: 11px; color: var(--red); }
+  .opt { font-size: 11px; color: var(--muted); }
+  .qs-actions { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+  .qs-banner {
+    margin-top: 14px; font-size: 13px; color: var(--red);
+    background: var(--red-soft); border-radius: var(--radius-sm); padding: 8px 12px;
+  }
+  .qs-steps { margin: 0; padding-left: 20px; }
+  .qs-steps li { margin-bottom: 12px; }
+  .qs-steps code {
+    background: #f1f2f4; border-radius: 5px; padding: 1px 6px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px;
+  }
+  .qs-done {
+    border-color: #bfe6d8; background: linear-gradient(180deg, #f4fbf8, #fff 42%);
+  }
+  .qs-done h2 { font-size: 18px; margin: 0 0 4px; }
+  .qs-done .badge { margin-bottom: 12px; }
+  .qs-note { font-size: 12px; color: var(--muted); margin-top: 14px; }
+  .qs-sep {
+    display: flex; align-items: baseline; gap: 10px;
+    border-top: 1px solid var(--border); margin: 4px 0 18px; padding-top: 16px;
+  }
+  .qs-sep .card-title { font-size: 15px; }
+  .qs-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  @media (max-width: 560px) { .qs-pair { grid-template-columns: 1fr; } }
+  .qs-inline { display: flex; gap: 18px; flex-wrap: wrap; }
+  .qs-inline label {
+    display: flex; align-items: center; gap: 6px; font-size: 13px;
+  }
+  .qs-inline input { margin: 0; }
+</style>
+</head>
+<body class="ui-body">
+<div class="qs-wrap">
+
+  <header class="qs-hero">
+    <span class="qs-eyebrow">FIRST RUN</span>
+    <h1>NAL · 快速开始</h1>
+    <p>绑定机器人 QQ、管理员和 NapCat 安装位置，再选好对话与判官模型。保存后控制台会自动继续启动，不需要再改代码。</p>
+  </header>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">环境检查</div>
+        <div class="card-cap">只做存在性检查，不会改动任何文件</div>
+      </div>
+      <div class="card-actions"><span class="badge badge-neutral" id="env-state">检查中…</span></div>
+    </div>
+    <div class="qs-checks" id="checks"></div>
+  </section>
+
+  <div class="qs-main">
+    <section class="card" id="form-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">绑定信息</div>
+          <div class="card-cap">写入 state/setup.json（不入库，只在本机生效）</div>
+        </div>
+      </div>
+
+      <form id="form" autocomplete="off">
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="self_qq">机器人 QQ</label>
+            <span class="req">必填</span>
+          </div>
+          <input class="input" id="self_qq" data-field="self_qq" inputmode="numeric"
+                 placeholder="NapCat 要登录的那个号" autofocus>
+          <div class="row-hint">建议用小号；NapCat 扫码登录的就是这个 QQ。</div>
+          <div class="field-error hidden" data-err="self_qq"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="admin_qq">管理员 QQ</label>
+            <span class="req">必填</span>
+          </div>
+          <input class="input" id="admin_qq" data-field="admin_qq" inputmode="numeric"
+                 placeholder="你自己的 QQ">
+          <div class="row-hint">用这个号发 <code class="mono">/status</code>、<code class="mono">/character</code> 等管理指令。</div>
+          <div class="field-error hidden" data-err="admin_qq"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="group_id">群号</label>
+            <span class="opt">可留空</span>
+          </div>
+          <input class="input" id="group_id" data-field="group_id" inputmode="numeric"
+                 placeholder="只服务一个群时填写">
+          <div class="row-hint">留空 = 不限制：bot 加入哪个群就服务哪个群。</div>
+          <div class="field-error hidden" data-err="group_id"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="napcat_home">NapCat Shell 目录</label>
+            <span class="req">必填</span>
+          </div>
+          <input class="input" id="napcat_home" data-field="napcat_home"
+                 placeholder="例如 D:\NapCat\onekey\NapCat.52230.Shell">
+          <div class="row-hint">目录里应有 <code class="mono">NapCatWinBootMain.exe</code>。</div>
+          <div class="field-error hidden" data-err="napcat_home"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="ollama_home">Ollama 目录</label>
+            <span class="opt">可选</span>
+          </div>
+          <input class="input" id="ollama_home" data-field="ollama_home"
+                 placeholder="例如 D:\Ollama">
+          <div class="row-hint">只用云端 API 时可以留空；用本地模型时填含 <code class="mono">ollama.exe</code> 的目录。</div>
+          <div class="field-error hidden" data-err="ollama_home"></div>
+        </div>
+
+        <div class="qs-sep">
+          <span class="card-title">对话模型与判官模型</span>
+          <span class="opt">选一家国内端点，填上 Key 就能说话</span>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="model_provider">服务商</label>
+            <span class="opt">可稍后再配</span>
+          </div>
+          <select class="input" id="model_provider" data-field="model_provider"></select>
+          <div class="row-hint">选预设会填好端点与模型；模型 ID 和地址都可以改。</div>
+          <div class="field-error hidden" data-err="model_provider"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="model_base_url">API 地址</label>
+            <span class="req">必填</span>
+          </div>
+          <input class="input" id="model_base_url" data-field="model_base_url"
+                 placeholder="https://api.deepseek.com/v1">
+          <div class="row-hint">OpenAI 兼容端点，通常以 <code class="mono">/v1</code> 结尾。</div>
+          <div class="field-error hidden" data-err="model_base_url"></div>
+        </div>
+
+        <div class="qs-pair">
+          <div class="field">
+            <div class="field-top">
+              <label class="row-label" for="model_gen">对话模型</label>
+              <span class="req">必填</span>
+            </div>
+            <input class="input" id="model_gen" data-field="model_gen"
+                   placeholder="deepseek-chat">
+            <div class="field-error hidden" data-err="model_gen"></div>
+          </div>
+          <div class="field">
+            <div class="field-top">
+              <label class="row-label" for="model_judge">判官模型</label>
+              <span class="opt">留空同对话</span>
+            </div>
+            <input class="input" id="model_judge" data-field="model_judge"
+                   placeholder="deepseek-chat">
+            <div class="field-error hidden" data-err="model_judge"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label" for="model_key">API Key</label>
+            <span class="opt">留空 = 沿用已有 Key</span>
+          </div>
+          <input class="input" id="model_key" data-key="model_key" data-field="model_key"
+                 type="password" autocomplete="off" placeholder="sk-…">
+          <div class="row-hint">只写进本机，不入库，也不会在页面回显。</div>
+          <div class="field-error hidden" data-err="model_key"></div>
+        </div>
+
+        <div class="field">
+          <div class="field-top">
+            <label class="row-label">Key 保存方式</label>
+          </div>
+          <div class="qs-inline">
+            <label><input type="radio" name="model_key_mode" value="file" checked> 明文写入项目根
+              <code class="mono">qwen.key</code></label>
+            <label><input type="radio" name="model_key_mode" value="env"> 写入用户环境变量</label>
+          </div>
+          <div class="row-hint">文件方式最简单；环境变量方式不在项目目录留明文，重启控制台后也生效。</div>
+          <div class="field-error hidden" data-err="model_key_mode"></div>
+        </div>
+
+        <div class="field hidden" id="env-row">
+          <div class="field-top">
+            <label class="row-label" for="model_key_env">环境变量名</label>
+          </div>
+          <input class="input" id="model_key_env" data-field="model_key_env"
+                 placeholder="DEEPSEEK_API_KEY">
+          <div class="row-hint">向导会写进当前用户的环境变量（不需要管理员权限）。</div>
+          <div class="field-error hidden" data-err="model_key_env"></div>
+        </div>
+
+        <div class="qs-actions">
+          <button class="btn primary" type="submit" id="save">保存并启动</button>
+          <span class="muted" id="save-hint">保存后本页可以关闭，控制台继续启动</span>
+        </div>
+        <div class="qs-banner hidden" id="banner"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">保存后还需要做什么</div>
+          <div class="card-cap">三步把 QQ 接上</div>
+        </div>
+      </div>
+      <ol class="qs-steps">
+        <li><b>等启动完成</b><br>回到控制台窗口，它会依次拉起 Ollama、NapCat 和 bot。</li>
+        <li><b>登录机器人 QQ</b><br>NapCat 窗口弹出二维码时，用<b>机器人 QQ</b> 的手机 QQ 扫码。</li>
+        <li><b>接上反向 WS</b><br>在 NapCat WebUI「网络配置」新增 <b>WebSocket 客户端</b>，地址填
+          <code id="ws-url">ws://127.0.0.1:6700/onebot/v11/ws</code>，启用后 bot 才能收到消息。</li>
+      </ol>
+      <div class="qs-note">
+        管理面板会自动打开：<span class="mono" id="admin-url">http://127.0.0.1:6780</span>。<br>
+        这里填好模型与 Key 后她就能回复；面板里可以随时换模型、改 Key。
+        也建议把「运行开关 → 私聊白名单」设成管理员 QQ。
+      </div>
+    </section>
+  </div>
+
+  <section class="card qs-done hidden" id="done">
+    <span class="badge badge-on">已保存</span>
+    <h2>绑定完成，正在继续启动</h2>
+    <p class="muted" style="margin-top:0">这个页面可以关闭了。控制台窗口会接着启动整套环境；如果它已经关掉，重新双击
+      <span class="mono">start.bat</span>。</p>
+    <ol class="qs-steps">
+      <li>NapCat 窗口出现二维码 → 用 <b>机器人 QQ</b> 扫码登录。</li>
+      <li>NapCat WebUI「网络配置」→ 新增 <b>WebSocket 客户端</b> →
+        <code id="ws-url-done">ws://127.0.0.1:6700/onebot/v11/ws</code>。</li>
+      <li>管理面板 <span class="mono" id="admin-url-done">http://127.0.0.1:6780</span>
+        → 确认模型与 Key → 用管理员 QQ 私聊发
+        <code>/status</code> 验证。</li>
+    </ol>
+    <div class="qs-note" id="done-file"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var FIELDS = ['self_qq', 'admin_qq', 'group_id', 'napcat_home', 'ollama_home',
+                'model_provider', 'model_base_url', 'model_gen', 'model_judge',
+                'model_key_env'];
+  var PRESETS = [];
+  var status = null;
+
+  function $(sel) { return document.querySelector(sel); }
+  function fieldEl(name) { return document.querySelector('[data-field="' + name + '"]'); }
+  function errEl(name) { return document.querySelector('[data-err="' + name + '"]'); }
+
+  function esc(text) {
+    return String(text == null ? '' : text).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function renderChecks(checks) {
+    var box = $('#checks');
+    box.innerHTML = '';
+    var missing = 0;
+    (checks || []).forEach(function (c) {
+      if (!c.ok && c.required) missing += 1;
+      var badge = c.ok ? 'badge-on' : (c.required ? 'badge-warn' : 'badge-neutral');
+      var text = c.ok ? '正常' : (c.required ? '未找到' : '可选');
+      var row = document.createElement('div');
+      row.className = 'qs-check';
+      row.innerHTML =
+        '<span class="badge ' + badge + '">' + text + '</span>' +
+        '<div class="row-main"><div class="row-label">' + esc(c.label) + '</div>' +
+        '<div class="row-hint mono">' + esc(c.detail) + '</div></div>';
+      box.appendChild(row);
+    });
+    var st = $('#env-state');
+    if (missing) {
+      st.className = 'badge badge-warn';
+      st.textContent = missing + ' 项缺失';
+    } else {
+      st.className = 'badge badge-on';
+      st.textContent = '可以直接启动';
+    }
+  }
+
+  function presetById(id) {
+    for (var i = 0; i < PRESETS.length; i++) {
+      if (PRESETS[i].id === id) return PRESETS[i];
+    }
+    return null;
+  }
+
+  function buildProviderOptions(current) {
+    var sel = fieldEl('model_provider');
+    sel.innerHTML = '';
+    var blank = document.createElement('option');
+    blank.value = '';
+    blank.textContent = '暂不配置（稍后在管理面板设置）';
+    sel.appendChild(blank);
+    PRESETS.forEach(function (p) {
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.label;
+      sel.appendChild(o);
+    });
+    sel.value = current || '';
+  }
+
+  function fillFromPreset(id) {
+    var p = presetById(id);
+    if (!p) {
+      ['model_base_url', 'model_gen', 'model_judge', 'model_key_env'].forEach(function (n) {
+        var el = fieldEl(n);
+        if (el) el.value = '';
+      });
+      return;
+    }
+    fieldEl('model_base_url').value = p.base_url || '';
+    fieldEl('model_gen').value = p.gen_model || '';
+    fieldEl('model_judge').value = p.judge_model || '';
+    fieldEl('model_key_env').value = p.key_env || '';
+  }
+
+  function keyMode() {
+    var el = document.querySelector('input[name="model_key_mode"]:checked');
+    return el ? el.value : 'file';
+  }
+
+  function syncEnvRow() {
+    var row = $('#env-row');
+    if (row) row.classList.toggle('hidden', keyMode() !== 'env');
+  }
+
+  function applyStatus(s) {
+    status = s;
+    renderChecks(s.checks);
+    var setup = s.setup || {};
+    var suggested = s.suggested || {};
+    PRESETS = s.model_presets || [];
+    FIELDS.forEach(function (name) {
+      var el = fieldEl(name);
+      if (!el) return;
+      if (s.configured && setup[name]) {
+        el.value = setup[name];
+      } else if (name === 'napcat_home' || name === 'ollama_home') {
+        el.value = suggested[name] || '';
+      }
+    });
+    var configured = !!(s.configured && setup.model_provider);
+    var pid = configured ? setup.model_provider : (PRESETS[0] ? PRESETS[0].id : '');
+    buildProviderOptions(pid);
+    if (pid) {
+      fillFromPreset(pid);
+      if (configured) {
+        ['model_base_url', 'model_gen', 'model_judge', 'model_key_env']
+          .forEach(function (n) {
+            if (setup[n]) fieldEl(n).value = setup[n];
+          });
+      }
+    }
+    var mode = setup.model_key_mode || 'file';
+    var radio = document.querySelector('input[name="model_key_mode"][value="' + mode + '"]');
+    if (radio) radio.checked = true;
+    syncEnvRow();
+    var ws = 'ws://127.0.0.1:' + s.ports.bridge_ws + '/onebot/v11/ws';
+    var admin = 'http://127.0.0.1:' + s.ports.admin;
+    ['#ws-url', '#ws-url-done'].forEach(function (sel) { if ($(sel)) $(sel).textContent = ws; });
+    ['#admin-url', '#admin-url-done'].forEach(function (sel) { if ($(sel)) $(sel).textContent = admin; });
+  }
+
+  function showError(name, message) {
+    var box = errEl(name);
+    if (!box) return;
+    box.textContent = message;
+    box.classList.remove('hidden');
+    var input = fieldEl(name);
+    if (input) input.style.borderColor = 'var(--red)';
+  }
+
+  function clearErrors() {
+    FIELDS.concat(['model_key']).forEach(function (name) {
+      var box = errEl(name);
+      if (box) { box.textContent = ''; box.classList.add('hidden'); }
+      var input = fieldEl(name);
+      if (input) input.style.borderColor = '';
+    });
+    var banner = $('#banner');
+    banner.classList.add('hidden');
+    banner.textContent = '';
+  }
+
+  function showBanner(message) {
+    var banner = $('#banner');
+    banner.textContent = message;
+    banner.classList.remove('hidden');
+  }
+
+  function save(event) {
+    event.preventDefault();
+    clearErrors();
+    var payload = {};
+    FIELDS.forEach(function (name) {
+      var el = fieldEl(name);
+      payload[name] = el ? el.value.trim() : '';
+    });
+    payload.model_key_mode = keyMode();
+    payload.model_key = ($('#model_key').value || '').trim();
+    var btn = $('#save');
+    btn.disabled = true;
+    btn.textContent = '保存中…';
+    fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (resp) {
+      return resp.json().then(function (body) { return { resp: resp, body: body }; });
+    }).catch(function () {
+      return { resp: { ok: false }, body: { ok: false, error: '无法连接本地向导，请回到控制台按提示重开' } };
+    }).then(function (r) {
+      var body = r.body || {};
+      if (!r.resp.ok || !body.ok) {
+        (body.errors || []).forEach(function (e) { showError(e.field, e.message); });
+        showBanner(body.error || '请检查标红的输入项');
+        btn.disabled = false;
+        btn.textContent = '保存并启动';
+        return;
+      }
+      if (body.setup) applyStatus(Object.assign({}, status, { setup: body.setup, configured: true }));
+      $('#form-card').classList.add('hidden');
+      $('#done').classList.remove('hidden');
+      $('#done-file').textContent = status ? ('绑定文件：' + status.setup_file) : '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  fieldEl('model_provider').addEventListener('change', function () {
+    fillFromPreset(this.value);
+    if (!this.value) {
+      $('#env-row').classList.add('hidden');
+    } else {
+      syncEnvRow();
+    }
+  });
+  Array.prototype.forEach.call(
+    document.querySelectorAll('input[name="model_key_mode"]'),
+    function (el) { el.addEventListener('change', syncEnvRow); });
+
+  $('#form').addEventListener('submit', save);
+  fetch('/api/status').then(function (r) { return r.json(); }).then(applyStatus).catch(function () {
+    $('#env-state').className = 'badge badge-warn';
+    $('#env-state').textContent = '状态读取失败';
+  });
+}());
+</script>
+</body>
+</html>

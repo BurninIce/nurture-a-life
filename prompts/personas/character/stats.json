@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "active": "character",
+  "characters": {
+    "character": {
+      "name": "苏禾",
+      "stats": {
+        "affection": {
+          "label": "好感",
+          "meaning": "她愿不愿意靠近你。",
+          "up": ["愉快的相处：小步"],
+          "down": ["明确排斥、厌烦：1~3"],
+          "not_affect": [],
+          "gain_caps": {"陌生": 4, "相识": 8, "熟络": 10, "亲密": 12, "倾心": 15},
+          "gain_caps_big": {"陌生": 6, "相识": 12, "熟络": 25, "亲密": 30, "倾心": 32},
+          "down_cap": 3
+        },
+        "trust": {
+          "label": "信任",
+          "meaning": "她敢不敢把真实的自己交给你。",
+          "up": ["说到做到、交付真实信息：小步"],
+          "down": ["撒谎、利用她：1~2"],
+          "not_affect": [],
+          "gain_caps": {"陌生": 4, "相识": 6, "熟络": 8, "亲密": 10, "倾心": 12},
+          "gain_caps_big": {"陌生": 4, "相识": 10, "熟络": 20, "亲密": 25, "倾心": 28},
+          "down_cap": 2
+        },
+        "familiarity": {
+          "label": "熟悉度",
+          "meaning": "你们一起经历过多少。",
+          "up": ["聊得久、一起做过事：小步"],
+          "down": [],
+          "not_affect": ["熟悉度永不下降"],
+          "gain_caps": {"陌生": 3, "相识": 6, "熟络": 8, "亲密": 10, "倾心": 12},
+          "gain_caps_big": {"陌生": 3, "相识": 8, "熟络": 20, "亲密": 22, "倾心": 24},
+          "down_cap": 0
+        }
+      },
+      "aversions": [],
+      "relationship": {
+        "levels": ["陌生", "相识", "熟络", "亲密", "倾心"],
+        "floor": [
+          {"level": "倾心", "affection": 85, "trust": 75, "familiarity": 80},
+          {"level": "亲密", "affection": 70, "trust": 60, "familiarity": 65},
+          {"level": "熟络", "affection": 40, "trust": 30, "familiarity": 40},
+          {"level": "相识", "affection": 20, "trust": 20, "familiarity": 0}
+        ]
+      }
+    }
+  }
+}

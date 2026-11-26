@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live2D 展示台</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #10121a; color: #e8e9f0;
+               font: 15px/1.6 "Microsoft YaHei", system-ui, sans-serif; overflow: hidden; }
+  #stage { position: absolute; inset: 0; }
+  #hud { position: absolute; left: 20px; bottom: 18px; padding: 10px 14px;
+         background: rgba(16, 18, 26, .72); border: 1px solid rgba(255,255,255,.12);
+         border-radius: 10px; backdrop-filter: blur(6px); }
+  #mood { font-size: 20px; font-weight: 600; letter-spacing: 1px; }
+  #raw { color: #9aa0b4; font-size: 13px; margin-top: 2px; }
+  #tip { position: absolute; right: 20px; top: 18px; color: #9aa0b4;
+         font-size: 13px; text-align: right; max-width: 46vw; }
+  #err { position: absolute; inset: 0; display: none; place-content: center;
+         text-align: center; padding: 40px; color: #ffb4b4; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hud"><div id="mood">安静</div><div id="raw">等待情绪</div></div>
+<div id="tip">模型与运行时都从 CDN 取，需要联网；情绪来自本机服务。</div>
+<div id="err"></div>
+
+<!-- 顺序不能改：Cubism Core 必须先于 pixi-live2d-display 加载，
+     否则 bundle 拿不到全局对象，PIXI.live2d 不会注册。 -->
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const modelUrl = params.get('model') || '';
+let app = null, model = null, keys = [], lastMood = '';
+
+function fail(msg) {
+  const el = document.getElementById('err');
+  el.style.display = 'grid';
+  el.textContent = msg;
+}
+
+async function boot() {
+  if (!window.Live2DCubismCore) { fail('Cubism Core 没有加载成功。\n它由 Live2D 官方 CDN 提供，使用前请确认许可。'); return; }
+  if (!window.PIXI) { fail('pixi.js 没有加载成功，检查网络或 CDN 可达性。'); return; }
+  if (!PIXI.live2d) { fail('pixi-live2d-display 没有注册到 PIXI 上。\n最常见的原因是 Cubism Core 没在它之前加载。'); return; }
+  app = new PIXI.Application({ view: document.createElement('canvas'), transparent: true,
+                               autoStart: true, resizeTo: window });
+  document.getElementById('stage').appendChild(app.view);
+
+  window.addEventListener('resize', fit);
+  tick();   // 先开始轮询情绪，模型加载慢时页面也有反馈
+
+  const st = await (await fetch('/state')).json();
+  keys = st.keys || [];
+  const url = modelUrl || st.model;
+  document.getElementById('raw').textContent = '模型加载中…';
+  try {
+    model = await PIXI.live2d.Live2DModel.from(url, { autoInteract: false });
+  } catch (e) {
+    fail('模型加载失败：' + url + '\n' + (e && e.message ? e.message : e)
+         + '\n\n如果是纹理加载失败，多半是 CDN 对这个模型的分片不完整。'
+         + '换一个模型用 ?model=<模型 json 的 URL>，或把模型下到本地用 file 路径起个静态服务。');
+    return;
+  }
+  if (!model) { fail('模型返回空：' + url); return; }
+  app.stage.addChild(model);
+  fit();
+  applyMood(lastMood || '安静');
+}
+
+function fit() {
+  if (!model) return;
+  const s = Math.min(app.screen.width / model.width, app.screen.height / model.height) * 0.92;
+  model.scale.set(s);
+  model.x = (app.screen.width - model.width * s) / 2;
+  model.y = (app.screen.height - model.height * s) / 2 + 10;
+}
+
+function applyMood(name) {
+  document.getElementById('mood').textContent = name || '安静';
+  if (!model) return;
+  const i = keys.indexOf(name);
+  const core = model.internalModel.coreModel;
+  const count = core.getParameterCount ? core.getParameterCount() : 0;
+  // 大多数示例模型带 Exp01..Exp08 一组表情；按情绪在词表里的序号轮换，
+  // 模型没有这么多表情时停在上一个，不做随机，避免抽风。
+  const exprs = model.internalModel.settings.expressions || [];
+  if (exprs.length) {
+    const pick = i >= 0 ? i % exprs.length : 0;
+    model.expression(pick);
+  } else if (count >= 0) {
+    model.expression(0).catch(() => {});
+  }
+}
+
+async function tick() {
+  try {
+    const d = await (await fetch('/state')).json();
+    const s = d.state || {};
+    if ((s.mood || '') !== lastMood && s.mood) {
+      lastMood = s.mood || '';
+      document.getElementById('raw').textContent = s.raw ? ('原始情绪：' + s.raw) : '等待情绪';
+      applyMood(lastMood);
+    }
+  } catch (e) { /* 服务没起时静默，页面保持上一帧 */ }
+  setTimeout(tick, 1500);
+}
+
+boot();
+</script>
+</body>
+</html>
